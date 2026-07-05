@@ -1,7 +1,7 @@
 import css from "./SearchBox.module.css";
 
 interface SearchBoxProps {
-  handleSearch: (query: string) => string;
+  handleSearch: (query: string) => void;
 }
 
 function SearchBox({ handleSearch }: SearchBoxProps) {
