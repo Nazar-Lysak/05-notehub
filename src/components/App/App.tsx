@@ -1,4 +1,5 @@
 import NoteList from "../NoteList/NoteList";
+import Pagination from "../Pagination/Pagination";
 import css from "./App.module.css";
 
 function App() {
@@ -6,7 +7,7 @@ function App() {
     <div className={css.app}>
       <header className={css.toolbar}>
         <input className={css.input} type="text" placeholder="Search notes" />
-        {/* Пагінація */}
+        <Pagination />
         <button className={css.button}>Create note +</button>
         <NoteList />
       </header>
