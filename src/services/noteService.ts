@@ -6,13 +6,13 @@ interface FetchNotesResponse {
   totalPages: number
 }
 
-interface handleSubmitInterface {
+interface HandleSubmitInterface {
   title: string;
   content: string;
   tag: NoteTag
 }
 
-const TOKEN = import.meta.env.VITE_TOKEN;
+const TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN;
 const API_URL = "https://notehub-public.goit.study/api/notes";
 
 export const fetchNotes = async (note: string, page: number): Promise<FetchNotesResponse> => {
@@ -29,7 +29,7 @@ export const fetchNotes = async (note: string, page: number): Promise<FetchNotes
   return data;
 };
 
-export const createNote = async (note: handleSubmitInterface) => {
+export const createNote = async (note: HandleSubmitInterface): Promise<Note> => {
   const { data } = await axios.post(
     API_URL,
     note,
@@ -43,8 +43,8 @@ export const createNote = async (note: handleSubmitInterface) => {
   return data;
 };
 
-export const deleteNote = async (id: string): Promise<FetchNotesResponse> => {
-  const { data } = await axios.delete<FetchNotesResponse>(`${API_URL}/${id}`, {
+export const deleteNote = async (id: string): Promise<Note> => {
+  const { data } = await axios.delete<Note>(`${API_URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },

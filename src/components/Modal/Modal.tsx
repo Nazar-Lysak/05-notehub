@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import css from "./Modal.module.css";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   children: ReactNode;
@@ -7,6 +8,7 @@ interface ModalProps {
 }
 
 function Modal({ onClose, children }: ModalProps) {
+  const modalRoot = document.getElementById("modal-root");
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -30,10 +32,18 @@ function Modal({ onClose, children }: ModalProps) {
     }
   };
 
-  return (
-    <div className={css.backdrop} role="dialog" aria-modal="true" onClick={handleBackdropClick}>
+  if (!modalRoot) return null;
+
+  return createPortal(
+    <div
+      className={css.backdrop}
+      role="dialog"
+      aria-modal="true"
+      onClick={handleBackdropClick}
+    >
       <div className={css.modal}>{children}</div>
-    </div>
+    </div>,
+    modalRoot
   );
 }
 

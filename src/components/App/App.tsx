@@ -24,8 +24,10 @@ function App() {
   const createTodoMutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-      console.log('done')
+      queryClient.invalidateQueries({
+        queryKey: ["todos"],
+        exact: false,
+      });
     },
   });
 
@@ -37,6 +39,9 @@ function App() {
   });
 
   const handleSearch = useDebouncedCallback((query: string) => {
+    if (page !== 1) {
+      setPage(1)
+    }
     setSearchQuery(query);
   }, 700);
 
@@ -47,6 +52,10 @@ function App() {
   const closeModal = () => {
     setModal(false)
   }
+
+  const handleDelete = (id: string) => {
+    deleteTodoMutation.mutate(id);
+  };
 
   return (
     <div className={css.app}>
@@ -61,7 +70,7 @@ function App() {
       {isLoading && <p>Loading...</p>}
       {isError && <h2>Something went wrong</h2>}
       {isSuccess && data.notes.length > 0 && (
-        <NoteList notes={data.notes} deleteTodoMutation={deleteTodoMutation.mutate} />
+        <NoteList notes={data.notes} onDelete={handleDelete} />
       )}
       {modal && (
         <Modal onClose={closeModal}>

@@ -1,7 +1,7 @@
 export interface Note {
     id: string;
-    createAt: Date;
-    cupdatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     content: string;
     tag: NoteTag;
     title: string;

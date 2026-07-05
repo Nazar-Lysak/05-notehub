@@ -3,10 +3,14 @@ import css from "./NoteList.module.css";
 
 interface NoteListProps {
   notes: Note[];
-  deleteTodoMutation: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-function NoteList({ notes, deleteTodoMutation }: NoteListProps) {
+function NoteList({ notes, onDelete }: NoteListProps) {
+
+  const handleDelete = (id: string) => {
+    console.log(id)
+  }
 
   return (
     <ul className={css.list}>
@@ -18,7 +22,7 @@ function NoteList({ notes, deleteTodoMutation }: NoteListProps) {
             <p className={css.content}>{content}</p>
             <div className={css.footer}>
               <span className={css.tag}>{tag}</span>
-              <button className={css.button} onClick={() => deleteTodoMutation(id)}>Delete</button>
+              <button className={css.button} onClick={() => onDelete(id)}>Delete</button>
             </div>
           </li>
         )

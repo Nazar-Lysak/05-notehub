@@ -27,9 +27,7 @@ const SignupSchema = Yup.object({
     .required("Required"),
 
   content: Yup.string()
-    .min(1, "Too Short!")
-    .max(500, "Too Long!")
-    .required("Required"),
+    .max(500, "Too Long!"),
 
   tag: Yup.string()
     .oneOf(
@@ -44,7 +42,7 @@ function NoteForm({ onClose, handleSubmit }: NoteFormProps) {
   const onSubmit = (data: handleSubmitInterface) => {
     handleSubmit(data);
     onClose();
-  }
+  };
   return (
     <Formik
       initialValues={initialValuesObj}
