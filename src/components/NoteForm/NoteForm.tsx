@@ -1,46 +1,97 @@
+import * as Yup from 'yup';
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import css from "./NoteForm.module.css";
+import type { NoteTag } from "../../types/note";
 
-function NoteForm() {
+interface NoteFormProps {
+  handleSubmit: (data: handleSubmitInterface) => void;
+  onClose: () => void;
+}
+
+interface handleSubmitInterface {
+  title: string;
+  content: string;
+  tag: NoteTag
+}
+
+const initialValuesObj: handleSubmitInterface = {
+  title: "",
+  content: "",
+  tag: "Todo"
+}
+
+const SignupSchema = Yup.object({
+  title: Yup.string()
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+
+  content: Yup.string()
+    .min(1, "Too Short!")
+    .max(500, "Too Long!")
+    .required("Required"),
+
+  tag: Yup.string()
+    .oneOf(
+      ["Todo", "Work", "Personal", "Meeting", "Shopping"],
+      "Invalid tag"
+    )
+    .required("Required"),
+});
+
+function NoteForm({ onClose, handleSubmit }: NoteFormProps) {
+
+  const onSubmit = (data: handleSubmitInterface) => {
+    handleSubmit(data);
+    onClose();
+  }
   return (
-    <form className={css.form}>
-      <div className={css.formGroup}>
-        <label htmlFor="title">Title</label>
-        <input id="title" type="text" name="title" className={css.input} />
-        <span className={css.error} />
-      </div>
+    <Formik
+      initialValues={initialValuesObj}
+      onSubmit={onSubmit}
+      validationSchema={SignupSchema}
+    >
+      <Form className={css.form}>
+        <div className={css.formGroup}>
+          <label htmlFor="title">Title</label>
+          <Field id="title" type="text" name="title" className={css.input} />
+          <ErrorMessage name='title' className={css.error} component="span" />
+        </div>
 
-      <div className={css.formGroup}>
-        <label htmlFor="content">Content</label>
-        <textarea
-          id="content"
-          name="content"
-          rows={8}
-          className={css.textarea}
-        />
-        <span className={css.error} />
-      </div>
+        <div className={css.formGroup}>
+          <label htmlFor="content">Content</label>
+          <Field
+            as="textarea"
+            id="content"
+            name="content"
+            rows={8}
+            className={css.textarea}
+          />
+          <ErrorMessage component="span" name="content" className={css.error} />
+        </div>
 
-      <div className={css.formGroup}>
-        <label htmlFor="tag">Tag</label>
-        <select id="tag" name="tag" className={css.select}>
-          <option value="Todo">Todo</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Meeting">Meeting</option>
-          <option value="Shopping">Shopping</option>
-        </select>
-        <span className={css.error} />
-      </div>
+        <div className={css.formGroup}>
+          <label htmlFor="tag">Tag</label>
+          <Field id="tag" name="tag" className={css.select} as="select">
+            <option value="Todo">Todo</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Shopping">Shopping</option>
+          </Field>
+          <ErrorMessage component="span" name="tag" className={css.error} />
+        </div>
 
-      <div className={css.actions}>
-        <button type="button" className={css.cancelButton}>
-          Cancel
-        </button>
-        <button type="submit" className={css.submitButton} disabled={false}>
-          Create note
-        </button>
-      </div>
-    </form>
+        <div className={css.actions}>
+          <button type="button" className={css.cancelButton} onClick={onClose}>
+            Cancel
+          </button>
+          <button type="submit" className={css.submitButton} disabled={false}>
+            Create note
+          </button>
+        </div>
+      </Form>
+    </Formik>
   );
 }
 

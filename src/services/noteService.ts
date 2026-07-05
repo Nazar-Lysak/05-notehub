@@ -1,44 +1,50 @@
 import axios from "axios";
+import type { Note, NoteTag } from "../types/note";
 
-interface FetchMoviesResponse {
-  results: unknown[];
-  total_pages: number 
+interface FetchNotesResponse {
+  notes: Note[];
+  totalPages: number
 }
 
-const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+interface handleSubmitInterface {
+  title: string;
+  content: string;
+  tag: NoteTag
+}
 
-export const fetchNotes = async (note: string, page : number): Promise<FetchMoviesResponse> => {
-  const {data} = await axios.get<FetchMoviesResponse>("https://notehub-public.goit.study/api/notes", {
+const TOKEN = import.meta.env.VITE_TOKEN;
+const API_URL = "https://notehub-public.goit.study/api/notes";
+
+export const fetchNotes = async (note: string, page: number): Promise<FetchNotesResponse> => {
+  const { data } = await axios.get<FetchNotesResponse>(API_URL, {
     params: {
-      query: note,
-      page
+      search: note,
+      page,
+      perPage: 10
     },
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },
   });
+  return data;
+};
+
+export const createNote = async (note: handleSubmitInterface) => {
+  const { data } = await axios.post(
+    API_URL,
+    note,
+    {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  );
 
   return data;
 };
 
-export const createNote = async (note: string): Promise<FetchMoviesResponse> => {
-  const {data} = await axios.get<FetchMoviesResponse>("https://notehub-public.goit.study/api/notes", {
-    params: {
-      query: note,
-    },
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-
-  return data;
-};
-
-export const deleteNote = async (id: string): Promise<FetchMoviesResponse> => {
-  const {data} = await axios.get<FetchMoviesResponse>("https://notehub-public.goit.study/api/notes", {
-    params: {
-      query: id,
-    },
+export const deleteNote = async (id: string): Promise<FetchNotesResponse> => {
+  const { data } = await axios.delete<FetchNotesResponse>(`${API_URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },
