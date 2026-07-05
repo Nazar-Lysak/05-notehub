@@ -7,6 +7,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { useDebouncedCallback } from "use-debounce";
 import Modal from "../Modal/Modal";
 import NoteForm from "../NoteForm/NoteForm";
+import SearchBox from "../SearchBox/SearchBox";
 
 function App() {
 
@@ -60,7 +61,7 @@ function App() {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <input className={css.input} type="text" placeholder="Search notes" onChange={(e) => handleSearch(e.target.value)} />
+        <SearchBox handleSearch={handleSearch} />
         {isSuccess && data.totalPages > 1 && (
           <Pagination page={page} setPage={setPage} totalPages={data.totalPages} />
         )}
