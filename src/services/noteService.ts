@@ -30,7 +30,7 @@ export const fetchNotes = async (note: string, page: number): Promise<FetchNotes
 };
 
 export const createNote = async (note: HandleSubmitInterface): Promise<Note> => {
-  const { data } = await axios.post(
+  const { data } = await axios.post<Note>(
     API_URL,
     note,
     {
